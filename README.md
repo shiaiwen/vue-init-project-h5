@@ -6,6 +6,12 @@
 
 技术栈：vue-cli4 + webpack4 + vant + axios + less + postcss-px2rem
 
+## 项目下载
+
+```sh
+git clone https://github.com/shiaiwen/vue-init-project-h5.git
+```
+
 ```js
 // 安装依赖
 npm install
@@ -60,10 +66,10 @@ module.exports = {
 你可以在代码中直接引入 Vant 组件，插件会自动将代码转化为方式二中的按需引入形式
 
 ```js
-import Vue from 'vue'
-import { Button } from 'vant'
+import Vue from "vue";
+import { Button } from "vant";
 
-Vue.use(Button)
+Vue.use(Button);
 ```
 
 ## rem 适配
@@ -101,13 +107,14 @@ npm install px2rem-loader --save-dev
 
 ```js
 function initRem() {
-  let cale = window.screen.availWidth > 750 ? 2 : window.screen.availWidth / 375
-  window.document.documentElement.style.fontSize = `${100 * cale}px`
+  let cale =
+    window.screen.availWidth > 750 ? 2 : window.screen.availWidth / 375;
+  window.document.documentElement.style.fontSize = `${100 * cale}px`;
 }
 
-window.addEventListener('resize', function() {
-  initRem()
-})
+window.addEventListener("resize", function() {
+  initRem();
+});
 ```
 
 ## axios 请求封装
@@ -115,44 +122,44 @@ window.addEventListener('resize', function() {
 1、设置请求拦截和响应拦截
 
 ```js
-const PRODUCT_URL = 'https://xxxx.com'
-const MOCK_URL = 'http://xxxx.com'
+const PRODUCT_URL = "https://xxxx.com";
+const MOCK_URL = "http://xxxx.com";
 let http = axios.create({
-  baseURL: process.env.NODE_ENV === 'production' ? PRODUCT_URL : MOCK_URL,
-})
+  baseURL: process.env.NODE_ENV === "production" ? PRODUCT_URL : MOCK_URL,
+});
 // 请求拦截器
 http.interceptors.request.use(
   (config) => {
     // 设置token，Content-Type
-    var token = sessionStorage.getItem('token')
-    config.headers['token'] = token
-    config.headers['Content-Type'] = 'application/json;charset=UTF-8'
+    var token = sessionStorage.getItem("token");
+    config.headers["token"] = token;
+    config.headers["Content-Type"] = "application/json;charset=UTF-8";
     // 请求显示loading效果
     if (config.loading === true) {
-      vm.$loading.show()
+      vm.$loading.show();
     }
-    return config
+    return config;
   },
   (error) => {
-    vm.$loading.hide()
-    return Promise.reject(error)
+    vm.$loading.hide();
+    return Promise.reject(error);
   }
-)
+);
 // 响应拦截器
 http.interceptors.response.use(
   (res) => {
-    vm.$loading.hide()
+    vm.$loading.hide();
     // token失效，重新登录
     if (res.data.code === 401) {
       //  重新登录
     }
-    return res
+    return res;
   },
   (error) => {
-    vm.$loading.hide()
-    return Promise.reject(error)
+    vm.$loading.hide();
+    return Promise.reject(error);
   }
-)
+);
 ```
 
 2、封装 get 和 post 请求方法
@@ -164,16 +171,16 @@ function get(url, data, lodaing) {
       .get(url)
       .then(
         (response) => {
-          resolve(response)
+          resolve(response);
         },
         (err) => {
-          reject(err)
+          reject(err);
         }
       )
       .catch((error) => {
-        reject(error)
-      })
-  })
+        reject(error);
+      });
+  });
 }
 
 function post(url, data, loading) {
@@ -182,27 +189,27 @@ function post(url, data, loading) {
       .post(url, data, { loading: loading })
       .then(
         (response) => {
-          resolve(response)
+          resolve(response);
         },
         (err) => {
-          reject(err)
+          reject(err);
         }
       )
       .catch((error) => {
-        reject(error)
-      })
-  })
+        reject(error);
+      });
+  });
 }
 
-export { get, post }
+export { get, post };
 ```
 
 3、把 get，post 方法挂载到 vue 实例上。
 
 ```js
 // main.js
-import { get, post } from './js/ajax'
-Vue.prototype.$http = { get, post }
+import { get, post } from "./js/ajax";
+Vue.prototype.$http = { get, post };
 ```
 
 ## 工具类函数封装
@@ -226,8 +233,8 @@ export default {
 2、在 main.js 通过 vue.use()注册
 
 ```js
-import utils from './js/utils'
-Vue.use(utils)
+import utils from "./js/utils";
+Vue.use(utils);
 ```
 
 本文提供以下函数封装
@@ -289,8 +296,8 @@ Vue 项目中实现路由按需加载（路由懒加载）的 3 中方式：
 
 ```js
 router.beforeEach((to, from, next) => {
-  document.title = to.meta.title
-})
+  document.title = to.meta.title;
+});
 ```
 
 #### 登录权限校验
@@ -306,32 +313,32 @@ router.beforeEach((to, from, next) => {
 ```js
 const routes = [
   {
-    path: '/',
-    name: 'home',
-    component: () => import('../views/Home.vue'),
-    meta: { title: '首页', keepAlive: false, auth: false },
+    path: "/",
+    name: "home",
+    component: () => import("../views/Home.vue"),
+    meta: { title: "首页", keepAlive: false, auth: false },
   },
   {
-    path: '/mine',
-    name: 'mine',
-    component: () => import('../views/mine.vue'),
-    meta: { title: '我的', keepAlive: false, auth: true },
+    path: "/mine",
+    name: "mine",
+    component: () => import("../views/mine.vue"),
+    meta: { title: "我的", keepAlive: false, auth: true },
   },
-]
+];
 ```
 
 2、在路由首页进行判断。当`to.meta.auth`为`true`(需要登录)，且不存在登录信息缓存时，需要重定向去登录页面
 
 ```js
 router.beforeEach((to, from, next) => {
-  document.title = to.meta.title
-  const userInfo = sessionStorage.getItem('userInfo') || null
+  document.title = to.meta.title;
+  const userInfo = sessionStorage.getItem("userInfo") || null;
   if (!userInfo && to.meta.auth) {
-    next('/login')
+    next("/login");
   } else {
-    next()
+    next();
   }
-})
+});
 ```
 
 #### 页面缓存配置
@@ -343,18 +350,18 @@ router.beforeEach((to, from, next) => {
 ```js
 const routes = [
   {
-    path: '/',
-    name: 'home',
-    component: () => import('../views/Home.vue'),
-    meta: { title: '首页', keepAlive: false, auth: false },
+    path: "/",
+    name: "home",
+    component: () => import("../views/Home.vue"),
+    meta: { title: "首页", keepAlive: false, auth: false },
   },
   {
-    path: '/list',
-    name: 'list',
-    component: () => import('../views/list.vue'),
-    meta: { title: '列表页', keepAlive: true, auth: false },
+    path: "/list",
+    name: "list",
+    component: () => import("../views/list.vue"),
+    meta: { title: "列表页", keepAlive: true, auth: false },
   },
-]
+];
 ```
 
 2、在 app.vue 做缓存判断
@@ -375,8 +382,8 @@ const routes = [
 环境变量文件中只包含环境变量的“键=值”对：
 
 ```js
-NODE_ENV = 'production'
-VUE_APP_ENV = 'production' // 只有VUE_APP开头的环境变量可以在项目代码中直接使用
+NODE_ENV = "production";
+VUE_APP_ENV = "production"; // 只有VUE_APP开头的环境变量可以在项目代码中直接使用
 ```
 
 除了自定义的 VUE*APP*\*变量之外，还有两个可用的变量：
@@ -413,8 +420,8 @@ VUE_APP_ENV = 'production'
 
 ```js
 // 根据环境引入不同配置 process.env.NODE_ENV
-const config = require('./env.' + process.env.VUE_APP_ENV)
-module.exports = config
+const config = require("./env." + process.env.VUE_APP_ENV);
+module.exports = config;
 ```
 
 在同级目录下新建 env.development.js，env.test.js，env.production.js，在里面配置需要的变量。  
@@ -422,9 +429,9 @@ module.exports = config
 
 ```js
 module.exports = {
-  baseUrl: 'http://localhost:8089', // 项目地址
-  baseApi: 'https://www.mock.com/api', // 本地api请求地址
-}
+  baseUrl: "http://localhost:8089", // 项目地址
+  baseApi: "https://www.mock.com/api", // 本地api请求地址
+};
 ```
 
 2、配置打包命令
@@ -459,16 +466,16 @@ vue-cli3 开始，新建的脚手架都需要我们在 vue.config.js 配置我�
 ```js
 module.exports = {
   // 部署应用包时的基本URL，默认为'/'
-  publicPath: './',
+  publicPath: "./",
 
   // 将构建好的文件输出到哪里，本司要求
-  outputDir: 'dist/static',
+  outputDir: "dist/static",
 
   // 放置生成的静态资源(js、css、img、fonts)的目录。
-  assetsDir: 'static',
+  assetsDir: "static",
 
   // 指定生成的 index.html 的输出路径
-  indexPath: 'index.html',
+  indexPath: "index.html",
 
   // 是否使用包含运行时编译器的 Vue 构建版本。
   runtimeCompiler: false,
@@ -489,7 +496,7 @@ module.exports = {
       postcss: {
         // options here will be passed to postcss-loader
         plugins: [
-          require('postcss-px2rem')({
+          require("postcss-px2rem")({
             remUnit: 100,
           }),
         ],
@@ -503,40 +510,40 @@ module.exports = {
   chainWebpack: (config) => {
     // 配置别名
     config.resolve.alias
-      .set('@', resolve('src'))
-      .set('assets', resolve('src/assets'))
-      .set('components', resolve('src/components'))
-      .set('views', resolve('src/views'))
+      .set("@", resolve("src"))
+      .set("assets", resolve("src/assets"))
+      .set("components", resolve("src/components"))
+      .set("views", resolve("src/views"));
 
-    config.optimization.minimizer('terser').tap((args) => {
+    config.optimization.minimizer("terser").tap((args) => {
       // 去除生产环境console
-      args[0].terserOptions.compress.drop_console = true
-      return args
-    })
+      args[0].terserOptions.compress.drop_console = true;
+      return args;
+    });
   },
 
   // 是否为 Babel 或 TypeScript 使用 thread-loader。该选项在系统的 CPU 有多于一个内核时自动启用，仅作用于生产构建。
-  parallel: require('os').cpus().length > 1,
+  parallel: require("os").cpus().length > 1,
 
   devServer: {
-    host: '0.0.0.0',
+    host: "0.0.0.0",
     port: 8088, // 端口号
     https: false, // https:{type:Boolean}
     open: false, // 配置自动启动浏览器  open: 'Google Chrome'-默认启动谷歌
 
     // 配置多个代理
     proxy: {
-      '/api': {
-        target: 'https://www.mock.com',
+      "/api": {
+        target: "https://www.mock.com",
         ws: true, // 代理的WebSockets
         changeOrigin: true, // 允许websockets跨域
         pathRewrite: {
-          '^/api': '',
+          "^/api": "",
         },
       },
     },
   },
-}
+};
 ```
 
 ## 基础组件封装
@@ -544,22 +551,22 @@ module.exports = {
 在开发项目过程中，通常会用到很多功能和设计相类似的组件，toast 和 dialog 组件基本是每一个移动端项目都会用到的。为了更好匹配自己公司的 UI 设计风格，我们没有直接用 vant 的 toast 和 dialog 组件，而是自己封装了类似的组件，可供直接调用，如：
 
 ```js
-this.$toast({ msg: '手机号码不能为空' })
+this.$toast({ msg: "手机号码不能为空" });
 
 this.$toast({
-  msg: '成功提示',
-  type: 'success',
-})
+  msg: "成功提示",
+  type: "success",
+});
 
 this.$dialog({
-  title: '删除提示',
-  text: '是否确定删除此标签？',
+  title: "删除提示",
+  text: "是否确定删除此标签？",
   showCancelBtn: true,
-  confirmText: '确认',
+  confirmText: "确认",
   confirm(content) {
-    alert('删除成功')
+    alert("删除成功");
   },
-})
+});
 ```
 
 效果图如下
@@ -606,12 +613,12 @@ npm install webpack-bundle-analyzer -D
 2、在 vue.config.js 配置
 
 ```js
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 configureWebpack: (config) => {
-  if (process.env.NODE_ENV === 'production') {
-    config.plugins.push(new BundleAnalyzerPlugin())
+  if (process.env.NODE_ENV === "production") {
+    config.plugins.push(new BundleAnalyzerPlugin());
   }
-}
+};
 ```
 
 打包后，我们可以看到这样一份依赖图
@@ -676,9 +683,9 @@ npm uninstall  vue vue-router vuex axios
 gzip 对基于文本格式文件的压缩效果最好（如：CSS、JavaScript 和 HTML），在压缩较大文件时往往可实现高达 70-90% 的压缩率，对已经压缩过的资源（如：图片）进行 gzip 压缩处理，效果很不好。
 
 ```js
-const CompressionPlugin = require('compression-webpack-plugin')
+const CompressionPlugin = require("compression-webpack-plugin");
 configureWebpack: (config) => {
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === "production") {
     config.plugins.push(
       new CompressionPlugin({
         // gzip压缩配置
@@ -686,9 +693,9 @@ configureWebpack: (config) => {
         threshold: 10240, // 对超过10kb的数据进行压缩
         deleteOriginalAssets: false, // 是否删除原文件
       })
-    )
+    );
   }
-}
+};
 ```
 
 ## 首页添加骨架屏
@@ -697,52 +704,55 @@ configureWebpack: (config) => {
 
 所谓的骨架屏，就是在页面内容未加载完成的时候，先使用一些图形进行占位，待内容加载完成之后再把它替换掉。在这个过程中用户会感知到内容正在逐渐加载并即将呈现，降低了“白屏”的不良体验。
 
-本文采用vue-skeleton-webpack-plugin插件为单页面应用注入骨架屏。  
+本文采用 vue-skeleton-webpack-plugin 插件为单页面应用注入骨架屏。
 
-1、在src的common文件夹下面创建了Skeleton1.vue，Skeleton2.vue，具体的结构和样式自行设计，此处省略一万字。。。。
+1、在 src 的 common 文件夹下面创建了 Skeleton1.vue，Skeleton2.vue，具体的结构和样式自行设计，此处省略一万字。。。。
 
-2、在同级目录下新建entry-skeleton.js
+2、在同级目录下新建 entry-skeleton.js
+
 ```js
-import Vue from 'vue'
-import Skeleton1 from './Skeleton1'
-import Skeleton2 from './Skeleton2'
+import Vue from "vue";
+import Skeleton1 from "./Skeleton1";
+import Skeleton2 from "./Skeleton2";
 
 export default new Vue({
   components: {
     Skeleton1,
-    Skeleton2
+    Skeleton2,
   },
   template: `
     <div>
       <skeleton1 id="skeleton1" style="display:none"/>
       <skeleton2 id="skeleton2" style="display:none"/>
     </div>
-  `
-})
+  `,
+});
 ```
-在vue.config.js下配置插件
+
+在 vue.config.js 下配置插件
 
 ```js
-const SkeletonWebpackPlugin = require('vue-skeleton-webpack-plugin')
+const SkeletonWebpackPlugin = require("vue-skeleton-webpack-plugin");
 configureWebpack: (config) => {
   config.plugins.push(
     new SkeletonWebpackPlugin({
       webpackConfig: {
         entry: {
-          app: path.join(__dirname, './src/common/entry-skeleton.js'),
+          app: path.join(__dirname, "./src/common/entry-skeleton.js"),
         },
       },
       minimize: true,
       quiet: true,
       router: {
-        mode: 'hash',
+        mode: "hash",
         routes: [
-          { path: '/', skeletonId: 'skeleton1' },
-          { path: '/about', skeletonId: 'skeleton2' },
+          { path: "/", skeletonId: "skeleton1" },
+          { path: "/about", skeletonId: "skeleton2" },
         ],
       },
     })
-  )
-}
+  );
+};
 ```
-此时重新加载页面就可以看到我们的骨架屏了。**注意：一定要配置样式分离extract: true**
+
+此时重新加载页面就可以看到我们的骨架屏了。**注意：一定要配置样式分离 extract: true**
