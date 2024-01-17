@@ -1,10 +1,10 @@
 // vue.config.js
 const path = require('path')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
-const CompressionPlugin = require('compression-webpack-plugin')// 引入gzip压缩插件
+const CompressionPlugin = require('compression-webpack-plugin') // 引入gzip压缩插件
 const SkeletonWebpackPlugin = require('vue-skeleton-webpack-plugin')
 
-function resolve (dir) {
+function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
@@ -62,39 +62,44 @@ module.exports = {
       .set('components', resolve('src/components'))
       .set('views', resolve('src/views'))
 
-    config.optimization.minimizer('terser').tap((args) => {
+    config.optimization.minimizer('terser').tap(args => {
       // 去除生产环境console
       args[0].terserOptions.compress.drop_console = true
       return args
     })
   },
 
-  configureWebpack: (config) => {
-    config.plugins.push(new SkeletonWebpackPlugin({
-      webpackConfig: {
-        entry: {
-          app: path.join(__dirname, './src/common/entry-skeleton.js')
+  configureWebpack: config => {
+    config.plugins.push(
+      new SkeletonWebpackPlugin({
+        webpackConfig: {
+          entry: {
+            app: path.join(__dirname, './src/common/entry-skeleton.js')
+          }
+        },
+        minimize: true,
+        quiet: true,
+        router: {
+          mode: 'hash',
+          routes: [
+            { path: '/', skeletonId: 'skeleton1' },
+            { path: '/about', skeletonId: 'skeleton2' }
+          ]
         }
-      },
-      minimize: true,
-      quiet: true,
-      router: {
-        mode: 'hash',
-        routes: [
-          { path: '/', skeletonId: 'skeleton1' },
-          { path: '/about', skeletonId: 'skeleton2' }
-        ]
-      }
-    }))
+      })
+    )
 
     if (process.env.NODE_ENV === 'production') {
       config.plugins.push(new BundleAnalyzerPlugin())
 
-      config.plugins.push(new CompressionPlugin({ // gzip压缩配置
-        test: /\.js$|\.html$|\.css/, // 匹配文件名
-        threshold: 10240, // 对超过10kb的数据进行压缩
-        deleteOriginalAssets: false // 是否删除原文件
-      }))
+      config.plugins.push(
+        new CompressionPlugin({
+          // gzip压缩配置
+          test: /\.js$|\.html$|\.css/, // 匹配文件名
+          threshold: 10240, // 对超过10kb的数据进行压缩
+          deleteOriginalAssets: false // 是否删除原文件
+        })
+      )
     }
   },
 

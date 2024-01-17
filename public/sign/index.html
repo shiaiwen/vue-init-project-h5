@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>签名</title>
+  <style>
+    canvas {
+      margin: 30px;
+      box-shadow: 0 0 4px #aaa;
+      cursor: url("./pen.ico"), auto;
+    }
+
+    button {
+      margin-left: 30px;
+      padding: 5px 15px;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas width="300" height="600">
+    您的浏览器不支持Canvas, 请升级浏览器
+  </canvas>
+  <p>
+    <button class="submit">提交签名</button>
+    <button class="clear">清空签名</button>
+  </p>
+</body>
+<script>
+  // 获取 canvas
+  let cvs = $("canvas");
+  //获取画笔工具对象
+  let ctx = cvs.getContext("2d");
+  // 线条宽度
+  ctx.lineWidth = 3;
+  // 设置线端折角样式
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  cvs.onmousedown = (e) => {
+    // 开始绘制名字
+    ctx.beginPath();
+    ctx.moveTo(e.offsetX, e.offsetY);
+    cvs.onmousemove = (ev) => {
+      // 画笔跟着鼠标绘制线
+      ctx.lineTo(ev.offsetX, ev.offsetY);
+      // 线条的样式
+      // ctx.strokeStyle = "#f00";
+      // 上色
+      ctx.stroke()
+    };
+  };
+
+  cvs.onmouseup = () => (cvs.onmousemove = null);
+  $(".clear").onclick = () => ctx.clearRect(0, 0, cvs.width, cvs.height);
+  $(".submit").onclick = () => {
+    let aEl = document.createElement("a");
+    aEl.href = cvs.toDataURL('image/webp', 1)
+    aEl.download = '签名'
+    $('body').appendChild(aEl).click()
+    aEl.remove()
+  };
+
+  // 简化元素的获取
+  function $(select) {
+    return document.querySelector(select);
+  }
+</script>
+
+</html>

@@ -6,15 +6,9 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: () => import('../views/Home.vue'),
-    meta: { title: '首页', keepAlive: false }
-  },
-  {
-    path: '/about',
-    name: 'About',
-    component: () => import('../views/About.vue'),
-    meta: { title: '其他', keepAlive: false }
+    name: 'Form',
+    component: () => import('../views/form/index.vue'),
+    meta: { title: '提交表单信息', keepAlive: true }
   }
 ]
 
