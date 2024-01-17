@@ -2,10 +2,12 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import WeuiVue from 'weui-design-vue'
 
 import './assets/css/reset.css'
 import './assets/css/common.css'
 // import './style/variable.scss'
+import 'weui-design-vue/lib/weui-design-vue.css'
 
 import Dialog from './components/dialog'
 import Loading from './components/loading'
@@ -20,6 +22,7 @@ Vue.config.productionTip = false
 fastClick.attach(document.body)
 
 Vue.use(utils)
+Vue.use(WeuiVue)
 
 Vue.prototype.$dialog = Dialog
 Vue.prototype.$loading = Loading

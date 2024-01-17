@@ -61,9 +61,8 @@
         placeholder="请输入推荐员工"
       />
       <div style="margin: 16px;">
-        <van-button round block type="info" native-type="submit"
-          >提交</van-button
-        >
+
+        <weui-button @click="submitForm">提交</weui-button>
       </div>
     </van-form>
   </div>
@@ -99,7 +98,11 @@ export default {
   watch: {},
   created () {},
   mounted () {},
-  methods: {}
+  methods: {
+    submitForm () {
+      console.log(this.form)
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>
