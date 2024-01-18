@@ -62,7 +62,7 @@
       />
       <div style="margin: 16px;">
 
-        <weui-button @click="submitForm">提交</weui-button>
+        <weui-button @click="submitForm">继续</weui-button>
       </div>
     </van-form>
   </div>
