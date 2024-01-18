@@ -1,5 +1,15 @@
 <template>
   <div class="form">
+    <div class="swiper-container">
+      <div class="swiper-wrapper">
+        <div v-for="(item, index) in goods" :key="index" class="swiper-slide">
+          <div class="share-detail">
+            <img alt="" class="goods-img" :src="item.mainpic" />
+          </div>
+          <div class="goods-content">{{ item.title }}</div>
+        </div>
+      </div>
+    </div>
     <van-form>
       <van-field
         v-model="form.name"
@@ -61,7 +71,6 @@
         placeholder="请输入推荐员工"
       />
       <div style="margin: 16px;">
-
         <weui-button @click="submitForm">继续</weui-button>
       </div>
     </van-form>
@@ -71,6 +80,7 @@
 <script>
 import Vue from 'vue'
 import { Field, Button, RadioGroup, Form, Radio } from 'vant'
+import Swiper from 'swiper'
 Vue.use(Field)
 Vue.use(Radio)
 Vue.use(Form)
@@ -91,13 +101,34 @@ export default {
         lxrName: '',
         otherCommand: '',
         recommend: ''
-      }
+      },
+      goods: [
+        {
+          mainpic: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.zhihu.com%2Fquestion%2F519213556&psig=AOvVaw1aqoILNegCSXSzicUOP_Nx&ust=1705633046721000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCMCto7L45YMDFQAAAAAdAAAAABAD'
+        }
+      ]
     }
   },
   computed: {},
   watch: {},
   created () {},
-  mounted () {},
+  mounted () {
+    // eslint-disable-next-line no-new
+    new Swiper('.swiper-container', {
+      slidesPerView: 1.7, // 可以看到前后的块
+      spaceBetween: 40,
+      centeredSlides: true,
+      loop: true, // 循环
+      pagination: '.swiper-pagination', // 如果需要分页器
+      bulletClass: 'my-swiper-pagination-bullet', // 自定义分页器样式
+      bulletActiveClass: 'my-bullet-active' // 当前选中分页器样式
+      // 如果需要前进后退按钮
+      // nextButton: '.swiper-button-next',
+      // prevButton: '.swiper-button-prev'
+      // 如果需要滚动条
+      // scrollbar: '.swiper-scrollbar'
+    })
+  },
   methods: {
     submitForm () {
       console.log(this.form)
@@ -111,5 +142,32 @@ export default {
     .van-field {
       margin-bottom: 20px;
     }
+  }
+</style>
+<style>
+  .my-swiper-pagination-bullet {
+    width: 0.5rem;
+    height: 0.08rem;
+    display: block;
+    float: left;
+    margin: 0;
+    border-radius: 0;
+    margin-top: 0.3rem;
+    background: rgba(255, 255, 255, 0.37);
+    margin-left: 1.3rem;
+  }
+
+  .my-swiper-pagination-bullet:nth-of-type(2) {
+    position: relative;
+    left: 1.6rem;
+  }
+
+  .my-swiper-pagination-bullet:nth-of-type(3) {
+    position: relative;
+    left: 3.1rem;
+  }
+
+  .my-bullet-active {
+    background: #fff;
   }
 </style>

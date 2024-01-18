@@ -12,6 +12,7 @@ import 'weui-design-vue/lib/weui-design-vue.css'
 import Dialog from './components/dialog'
 import Loading from './components/loading'
 import toast from './components/toast'
+import 'swiper/dist/css/swiper.css'
 
 import './JS/plugin'
 import { get, post } from './JS/ajax'
