@@ -6,9 +6,7 @@
     </keep-alive>
   </div>
 </template>
-
 <script>
-
 export default {
   name: 'App'
 
@@ -23,6 +21,5 @@ export default {
   font-size: 16px;
   background: #fff;
   box-sizing: border-box;
-  text-align: center;
 }
 </style>
